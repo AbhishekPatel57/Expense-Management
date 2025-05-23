@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class ExpenseList extends StatelessWidget {
   final List<Expense> expenses;
 
-  ExpenseList({required this.expenses});
+  const ExpenseList({super.key, required this.expenses});
 
   @override
   Widget build(BuildContext context) {

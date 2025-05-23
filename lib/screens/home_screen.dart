@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _MonthlyTotals extends StatelessWidget {
   final List<Expense> expenses;
 
-  const _MonthlyTotals({Key? key, required this.expenses}) : super(key: key);
+  const _MonthlyTotals({required this.expenses});
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +64,29 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _expenses = loaded);
   }
 
-  void _addExpense(Expense expense) async {
-    setState(() => _expenses.add(expense));
-    await Expense.saveExpenses(_expenses);
-  }
+  void _handleSubmitExpense(Expense expense, int? index) async {
+  setState(() {
+    if (index != null) {
+      _expenses[index] = expense; // Edit
+    } else {
+      _expenses.add(expense); // Add
+    }
+  });
+  await Expense.saveExpenses(_expenses);
+}
+
+  void _editExpense(int index) {
+  final exp = _expenses[index];
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => AddExpenseScreen(
+        existingExpense: exp,
+        index: index,
+        onSubmit: _handleSubmitExpense,
+      ),
+    ),
+  );
+}
 
   void _deleteExpense(int index) async {
     setState(() => _expenses.removeAt(index));
@@ -90,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _openAddExpenseScreen() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => AddExpenseScreen(onSubmit: _addExpense),
+      builder: (_) => AddExpenseScreen(onSubmit: _handleSubmitExpense),
     ));
   }
 
@@ -137,21 +156,19 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(exp.title),
               subtitle: Text(
                 '${exp.category} • ${exp.date.toLocal().toString().split(' ')[0]}',
-              ),
+              ),onLongPress: () => _editExpense(index),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('₹${exp.amount.toStringAsFixed(2)}'),
                   IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteExpense(index),
-                    ),
-                    IconButton(
                     icon: Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () {
-                      // TODO: Implement edit expense functionality
-                    },
-                    ),
+                    onPressed: () => _editExpense(index),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => _deleteExpense(index),
+                  ),
                 ],
               ),
             ),

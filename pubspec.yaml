@@ -33,7 +33,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.1
-  flutter_local_notifications: ^15.1.0
+  flutter_local_notifications: ^19.2.1
   shared_preferences: ^2.2.2
   google_fonts: ^6.1.0
 
@@ -41,7 +41,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
-  timezone: ^0.9.4
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:

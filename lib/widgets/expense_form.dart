@@ -4,7 +4,7 @@ import '../models/expense.dart';
 class ExpenseForm extends StatefulWidget {
   final Function(Expense) onSubmit;
 
-  ExpenseForm({required this.onSubmit});
+  const ExpenseForm({super.key, required this.onSubmit});
 
   @override
   _ExpenseFormState createState() => _ExpenseFormState();

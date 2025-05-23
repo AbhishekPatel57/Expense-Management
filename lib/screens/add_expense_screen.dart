@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/expense.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-  final Function(Expense) onSubmit;
+  final Function(Expense, int?) onSubmit;
+  final Expense? existingExpense;
+  final int? index;
 
-  const AddExpenseScreen({Key? key, required this.onSubmit}) : super(key: key);
+  const AddExpenseScreen({super.key, required this.onSubmit, this.existingExpense, this.index});
 
   @override
   _AddExpenseScreenState createState() => _AddExpenseScreenState();
 }
+
 
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _titleController = TextEditingController();
@@ -16,6 +19,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   DateTime? _selectedDate;
   final List<String> _categories = ['Food', 'Transport', 'Bills', 'Shopping', 'Other'];
   String _selectedCategory = 'Food';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingExpense != null) {
+      _titleController.text = widget.existingExpense!.title;
+      _amountController.text = widget.existingExpense!.amount.toString();
+      _selectedDate = widget.existingExpense!.date;
+      _selectedCategory = widget.existingExpense!.category;
+    }
+  }
 
   void _submitData() {
     final title = _titleController.text.trim();
@@ -28,16 +42,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       return;
     }
 
-    final newExpense = Expense(
+    final updatedExpense = Expense(
       title: title,
       amount: amount,
       date: _selectedDate!,
       category: _selectedCategory,
     );
 
-    widget.onSubmit(newExpense);
+    widget.onSubmit(updatedExpense, widget.index);
     Navigator.of(context).pop();
   }
+
 
   void _presentDatePicker() {
     showDatePicker(
